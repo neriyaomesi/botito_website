@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>בוטיטו</title>
+        <title>בוטיטו - הבוט המתקדם</title>
         <link rel="icon" type="image/png" href="favicon.png">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
         <link href="./style.css" rel="stylesheet">
@@ -32,12 +32,14 @@
     <div class="container">
         <section id="news" class="section">
             <h2>📰 || חדשות</h2>
-            <p>כעת, תוכלו להוסיף בעצמכם פקודות ותגובות!! 🎉</p>
+            <p>כעת, ה - AI של בוטיטו הרבה יותר משוכלל!! 🎉</p>
         </section>
 
         <section id="updates" class="section">
             <h2>🔄 || עדכונים</h2>
-            <p>גרסה 10.0 עלתה לאוויר עם יכולות AI משופרות ועיצוב חדש! 🚀</p>
+            <p>🚀 || הפקודות החדשות בבוט || 🚀</p>
+            <p>!מילים - סננו קבוצות 📄</p>
+            </p>!סוללה - כמות הסוללה בבוט 🔋</p>
         </section>
 
         <section id="commands" class="section">
@@ -87,12 +89,15 @@
                 <li><a href="https://wa.me/972552683919?text=!הסרת פקודה">!הסרת פקודה - הסירו פקודות🥺</a></li>
                 <li><a href="https://wa.me/972552683919?text=!ניסיון">!ניסיון - הבוט שולח קבצים?🐛</a></li>
                 <li><a href="https://wa.me/972552683919?text=!ספוטיפיי (טקסט)">!ספוטיפיי - בצעו חיפוש מתקדם בספוטיפיי🫨</a></li>
-                <li><a href="https://wa.me/972552683919?text=!שידוך">!שידוך - שדכו אנשים💍</a></li>
+                <li><a href="https://wa.me/972552683919?text=!שידוך">!שידוך - שדכו אנשים💍</a></li></li>
+                <li><a href="https://wa.me/972552683919?text=!מילים">!מילים - הוראות שימוש בסינון שלכם📄</a></li>
+                <li><a href="https://wa.me/972552683919?text=!סוללה">!סוללה - מצב הסוללה בבוט🔋</a></li></li>
+
+                <a href="https://wa.me/972552683919?text=!פקודות" class="chat-button">💬 צ'אט בוואטסאפ</a>
 
             </ul>
         </section>
 
-        <a href="https://wa.me/972552683919?text=!פקודות" class="chat-button">💬 צ'אט בוואטסאפ</a>
     </div>
     <script>
         // Custom cursor
@@ -118,6 +123,43 @@
             line.style.animationDuration = '30s'; // Slower animation
             line.style.animationDelay = `${index * 5}s`;
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+    const codeAnimation = document.querySelector('.code-animation');
+    const matrixCharacters = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン123456789@#$%&*";
+    const numberOfLines = 15;
+
+    function createCodeLine() {
+        const line = document.createElement('div');
+        line.className = 'code-line';
+        line.style.top = Math.random() * 100 + '%';
+        line.style.animationDelay = Math.random() * 15 + 's'; // הארכת זמן העיכוב
+        
+        let code = '';
+        for(let i = 0; i < 20; i++) {
+            code += matrixCharacters[Math.floor(Math.random() * matrixCharacters.length)];
+        }
+        line.textContent = code;
+        
+        return line;
+    }
+
+    // יצירה ראשונית של שורות הקוד
+    for(let i = 0; i < numberOfLines; i++) {
+        codeAnimation.appendChild(createCodeLine());
+    }
+
+    // עדכון מתמשך של שורות הקוד
+    setInterval(() => {
+        const lines = document.querySelectorAll('.code-line');
+        lines.forEach(line => {
+            if (!line.style.animationName) {
+                line.remove();
+                codeAnimation.appendChild(createCodeLine());
+            }
+        });
+    }, 60000); // הארכת זמן הרענון
+});
     </script>
 </body>
 </html>
