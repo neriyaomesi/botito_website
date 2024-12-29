@@ -1,169 +1,548 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>בוטיטו - הבוט המתקדם</title>
-        <link rel="icon" type="image/png" href="favicon.png">
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-        <link href="./style.css" rel="stylesheet">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בוטיטו - AI Assistant</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #9d00ff;
+            --neon-pink: #ff00ff;
+            --dark: #000116;
+            --light: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Enhanced Typography */
+        h1, h2, h3 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .logo {
+            font-size: 5rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+            color: var(--light);
+            text-shadow: 0 0 10px var(--neon-blue),
+                         0 0 20px var(--neon-purple),
+                         0 0 30px var(--neon-pink);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px var(--neon-blue),
+                            0 0 20px var(--neon-purple),
+                            0 0 30px var(--neon-pink);
+            }
+            to {
+                text-shadow: 0 0 20px var(--neon-blue),
+                            0 0 30px var(--neon-purple),
+                            0 0 40px var(--neon-pink);
+            }
+        }
+
+        section {
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            padding: 0.5rem 2rem;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            border-radius: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+        }
+
+        /* Enhanced Command Cards */
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .command-card {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--neon-blue);
+            padding: 2rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .command-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .command-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .command-card a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 1.2rem;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 243, 255, 0.2);
+        }
+
+        .command-card:hover a {
+            color: var(--neon-blue);
+        }
+
+        /* Background Effects */
+        #particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: auto;  /* מאפשר אינטראקציה עם הנקודות */
+    overflow: hidden;      /* מונע גלילה מיותרת */
+    background: transparent; /* מבטיח שהרקע שקוף */
+}
+
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(transparent 97%, rgba(0, 243, 255, 0.1) 98%),
+                linear-gradient(90deg, transparent 97%, rgba(0, 243, 255, 0.1) 98%);
+            background-size: 40px 40px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            opacity: 0.2;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateZ(0) rotate3d(1, 0, 1, 0deg); }
+            100% { transform: translateZ(100px) rotate3d(1, 0, 1, 360deg); }
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav-item a {
+            display: block;
+            padding: 1rem;
+            color: var(--light);
+            text-decoration: none;
+            background: rgba(0, 243, 255, 0.1);
+            border: 1px solid var(--neon-blue);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-item a:hover {
+            background: rgba(0, 243, 255, 0.2);
+            transform: scale(1.2);
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 3rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .nav {
+                bottom: 0;
+                right: 0;
+                top: auto;
+                transform: none;
+                width: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                padding: 1rem;
+            }
+
+            .nav-list {
+                flex-direction: row;
+                justify-content: space-around;
+            }
+
+            .commands-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
 <body>
-    <!-- sadasd -->
-    <div class="custom-cursor"></div>
-    <header>
-        <div class="code-animation">
-            <div class="code-line" style="top: 10%;">function botito() { console.log("Hello, I'm Botito!"); }</div>
-            <div class="code-line" style="top: 30%;">if (user.needsHelp()) { botito.assist(user); }</div>
-            <div class="code-line" style="top: 50%;">while (true) { botito.learnAndImprove(); }</div>
-            <div class="code-line" style="top: 70%;">botito.features.push("AI", "MachineLearning", "NLP");</div>
-        </div>
-        <h1 class="logo">🤖 בוטיטו 🤖</h1>
-    </header>
-    
-    <nav>
-        <ul>
-            <li><a href="#news">📰 || חדשות</a></li>
-            <li><a href="#updates">🔄 || עדכונים</a></li>
-            <li><a href="#commands">🛠️ || פקודות</a></li>
+    <div id="particles-js"></div>
+    <div class="cyber-grid"></div>
+
+    <nav class="nav">
+        <ul class="nav-list">
+            <li class="nav-item"><a href="#home" title="בית"><i class="fas fa-home"></i></a></li>
+            <li class="nav-item"><a href="#news" title="חדשות"><i class="fas fa-newspaper"></i></a></li>
+            <li class="nav-item"><a href="#updates" title="עדכונים"><i class="fas fa-sync"></i></a></li>
+            <li class="nav-item"><a href="#commands" title="פקודות"><i class="fas fa-terminal"></i></a></li>
         </ul>
     </nav>
 
-    <div class="container">
-        <section id="news" class="section">
-            <h2>📰 || חדשות</h2>
-            <p>כעת, תוכלו לראות את הסוללה של הבוט, מידע על מספרים, ומיקומים!! 🎉</p>
-        </section>
+    <section id="home">
+        <h1 class="logo">🤖 בוטיטו 🤖</h1>
+    </section>
 
-        <section id="updates" class="section">
-            <h2>🔄 || עדכונים</h2>
-            <p>🚀 || הפקודות החדשות בבוט || 🚀</p>
-            <p>!פרופיל - כעת תוכלו לקבל מידע על מספרי טלפון, כולל קישור לתמות פרופיל!</p>
-            <p>!מיקום - כעת תוכלו לקבל מידע על מיקומים , כתובות , ומקומות!!</p>
-        </section>
+    <section id="news">
+        <h2 class="section-title">📰 חדשות</h2>
+        <div class="commands-grid">
+            <div class="command-card">
+                <p>כעת, תוכלו לקבל בדיחות, להוסיף בדיחות, לתמלל הודעות לכתוב הודעות בלוח מודעות - ועוד!! 🎉</p>
+            </div>
+        </div>
+    </section>
 
-        <section id="commands" class="section">
-            <h2>🛠️ || רשימת פקודות</h2>
-            <ul class="command-list">
-                <li><a href="https://wa.me/972552683919?text=!פינג">!פינג - בדוק אם הבוט עובד 😎</a></li>
-                <li><a href="https://wa.me/972552683919?text=!סרטים וסדרות">!סרטים וסדרות - הסרטים בבוט 🎬</a></li>
-                <li><a href="https://wa.me/972552683919?text=!זמן">!זמן - קבלו את נתוני הזמן הנוכחי✨</a></li>
-                <li><a href="https://wa.me/972552683919?text=בוטי {השאלה}">בוטי {השאלה} - ה- AI 🌐</a></li>
-                <li><a href="https://wa.me/972552683919?text=!כולם">!כולם - תייג את כולם בקבוצה😝</a></li>
-                <li><a href="https://wa.me/972552683919?text=!קידומת חסומים">!קידומת חסומים - הגנו על הקבוצה🛡️</a></li>
-                <li><a href="https://wa.me/972552683919?text=!הסרתקישורים">!הסרתקישורים - ואין שולחי קישור⚔️</a></li>
-                <li><a href="https://wa.me/972552683919?text=!קישורים">!קישורים - נתונים על הקישורים🧮</a></li>
-                <li><a href="https://wa.me/972552683919?text=!אזהרות (מספר)">!אזהרות (מספר) - אזהרות להסרה📍</a></li>
-                <li><a href="https://wa.me/972552683919?text=!בטלהסרתקישורים">!בטלהסרתקישורים - אין חסימות✔️</a></li>
-                <li><a href="https://wa.me/972552683919?text=!הסרתסטיקרים">!הסרתסטיקרים - ואין סטיקרים🚫</a></li>
-                <li><a href="https://wa.me/972552683919?text=!בטלהסרתסטיקרים">!בטלהסרתסטיקרים - החזירו✅</a></li>
-                <li><a href="https://wa.me/972552683919?text=!סטיקר [ ]">!סטיקר [ ] - צרו סטיקרים🚀</a></li>
-                <li><a href="https://wa.me/972552683919?text=!מנהלי קבוצה">!מנהלי קבוצה - תייגו מנהלים🔥</a></li>
-                <li><a href="https://wa.me/972552683919?text=!צבע אדום">!צבע אדום - התראות אמת (בטא)📢</a></li>
-                <li><a href="https://wa.me/972552683919?text=!מוקדי חירום">!מוקדי חירום - מספרים לחירום🆘</a></li>
-                <li><a href="https://wa.me/972552683919?text=!סטופסטיקר">!סטופסטיקר - עצרו סטיקרים🛑</a></li>
-                <li><a href="https://wa.me/972552683919?text=!פלייסטיקר">!פלייסטיקר - החזירו סטיקרים✅</a></li>
-                <li><a href="https://wa.me/972552683919?text=!סטיקר -שקוף">!סטיקר -שקוף - עיצוב סטיקר💫</a></li>
-                <li><a href="https://wa.me/972552683919?text=!ברוך הבא">!ברוך הבא - הודעת פתיח לחדש👋🏽</a></li>
-                <li><a href="https://wa.me/972552683919?text=!קישור">!קישור - צרו קישורים לצ'אט🔗</a></li>
-                <li><a href="https://wa.me/972552683919?text=!דבר {טקסט}">!דבר {טקסט} - הפכו טקסט לקול🎙️</a></li>
-                <li><a href="https://wa.me/972552683919?text=!גימטריה {טקסט}">!גימטריה {טקסט} - קבלו גימטריה🔢</a></li>
-                <li><a href="https://wa.me/972552683919?text=!ויקי {טקסט}">!ויקי {טקסט} - חפשו בוויקיפדיה🔍</a></li>
-                <li><a href="https://wa.me/972552683919?text=!הגרלה {38 ,92, 33...}">!הגרלה {38 ,92, 33...} - הגרלות🗳️</a></li>
-                <li><a href="https://wa.me/972552683919?text=!חשב {תרגיל}">!חשב {תרגיל} - מחשבון📲</a></li>
-                <li><a href="https://wa.me/972552683919?text=!נעל קבוצה {מספר}">!נעל קבוצה {מספר} - נעלו קבוצה🔐</a></li>
-                <li><a href="https://wa.me/972552683919?text=!פתח קבוצה">!פתח קבוצה - פתחו קבוצה🔓</a></li>
-                <li><a href="https://wa.me/972552683919?text=!תהילים">!תהילים - קראו תהילים📖</a></li>
-                <li><a href="https://wa.me/972552683919?text=!משחקים">!משחקים - שחקו כשמשעמם🎮</a></li>
-                <li><a href="https://wa.me/972552683919?text=!קסם">!קסם - איך זה ייתכן?😮</a></li>
-                <li><a href="https://wa.me/972552683919?text=!qr {טקסט}">!qr {טקסט} - קודי QR לטקסטים🔳</a></li>
-                <li><a href="https://wa.me/972552683919?text=!חיפוש">!חיפוש - חפשו תוצאות מהירות⚡</a></li>
-                <li><a href="https://wa.me/972552683919?text=!יוטיוב (טקסט)">!יוטיוב (טקסט) - הורידו שירים🎧</a></li>
-                <li><a href="https://wa.me/972552683919?text=!זהה שיר">!זהה שיר - זהו שירים🎶</a></li>
-                <li><a href="https://wa.me/972552683919?text=!סקר">!סקר - דירוג הבוט ובקשות📊</a></li>
-                <li><a href="https://wa.me/972552683919?text=!בוטיטו השיר">!בוטיטו השיר - השיר של בוטיטו🎵</a></li>
-                <li><a href="https://wa.me/972552683919?text=!חזור">!חזור - חוזר אחרייך כמו תוכי🦜</a></li>
-                <li><a href="https://wa.me/972552683919?text=!תרגם">!תרגם - תרגמו הודעות🔠</a></li>
-                <li><a href="https://wa.me/972552683919?text=!ספידטסט">!ספידטסט - מהירות התגובה 🕓</a></li>
-                <li><a href="https://wa.me/972552683919?text=!הוספת פקודה">!הוספת פקודה - הוסיפו פקודות🤩</a></li>
-                <li><a href="https://wa.me/972552683919?text=!הסרת פקודה">!הסרת פקודה - הסירו פקודות🥺</a></li>
-                <li><a href="https://wa.me/972552683919?text=!ניסיון">!ניסיון - הבוט שולח קבצים?🐛</a></li>
-                <li><a href="https://wa.me/972552683919?text=!ספוטיפיי (טקסט)">!ספוטיפיי - בצעו חיפוש מתקדם בספוטיפיי🫨</a></li>
-                <li><a href="https://wa.me/972552683919?text=!שידוך">!שידוך - שדכו אנשים💍</a></li>
-                <li><a href="https://wa.me/972552683919?text=!מילים">!מילים - הוראות שימוש בסינון שלכם📄</a></li>
-                <li><a href="https://wa.me/972552683919?text=!סוללה">!סוללה - מצב הסוללה בבוט🔋</a></li></li>
-                <li><a href="https://wa.me/972552683919?text=!פרופיל">!פרופיל - נתונים על מספרים👁️</a></li>
-                <li><a href="https://wa.me/972552683919?text=!מיקום">!מיקום - מערכת המיקומים!!🛰️</a></li>
-                <li><a href="https://wa.me/972552683919?text=!קצר קישור ">!קצר קישור - קצרו קישורים!♋️</a></li>
+    <section id="updates">
+        <h2 class="section-title">🔄 עדכונים</h2>
+        <div class="commands-grid">
+            <div class="command-card">
+                <p>🚀 הפקודות החדשות בבוט 🚀</p>
+                <i></i><p>━━━━━━━━━━━━━━━<p><i>
+                <p>!בדיחה - כעת תוכלו לקבל בדיחות!</p>
+                <p>----------------</p>
+                <p>!הוסף בדיחה - הוסיפו בדיחה משלכם!</p>
+                <p>----------------</p>
+                <p>!תמלל - תמללו הודעות!!!</p>
+                <p>----------------</p>
+                <p>!מודעות - קבלו תפריט לכתיבת מודעה לכולם בלוח המודעות!!</p>
+                <p></p>
+                
+            </div>
+        </div>
+    </section>
 
+    <section id="commands" dir="rtl">
+        <h2 class="section-title">🛠️ פקודות</h2>
+        <div class="commands-grid">
+            <div class="command-card">
+                <a href="#">!פינג - בדוק אם הבוט עובד 😎</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!סרטים וסדרות - הסרטים בבוט 🎬</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!זמן - קבלו את נתוני הזמן הנוכחי✨</a>
+            </div>
+            <div class="command-card">
+                <a href="#">בוטי {השאלה} - ה- AI 🌐</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!כולם - תייג את כולם בקבוצה😝</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!קידומת חסומים - הגנו על הקבוצה🛡️</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!הסרתקישורים - ואין שולחי קישור⚔️</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!קישורים - נתונים על הקישורים🧮</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!אזהרות (מספר) - אזהרות להסרה📍</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!בטלהסרתקישורים - אין חסימות✔️</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!הסרתסטיקרים - ואין סטיקרים🚫</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!בטלהסרתסטיקרים - החזירו✅</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!סטיקר [ ] - צרו סטיקרים🚀</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!מנהלי קבוצה - תייגו מנהלים🔥</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!צבע אדום - התראות אמת (בטא)📢</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!מוקדי חירום - מספרים לחירום🆘</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!סטופסטיקר - עצרו סטיקרים🛑</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!פלייסטיקר - החזירו סטיקרים✅</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!סטיקר -שקוף - עיצוב סטיקר💫</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!ברוך הבא - הודעת פתיח לחדש👋🏽</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!קישור - צרו קישורים לצ'אט🔗</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!דבר {טקסט} - הפכו טקסט לקול🎙️</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!גימטריה {טקסט} - קבלו גימטריה🔢</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!ויקי {טקסט} - חפשו בוויקיפדיה🔍</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!הגרלה {38 ,92, 33...} - הגרלות🗳️</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!חשב {תרגיל} - מחשבון📲</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!נעל קבוצה {מספר} - נעלו קבוצה🔐</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!פתח קבוצה - פתחו קבוצה🔓</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!תהילים - קראו תהילים📖</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!משחקים - שחקו כשמשעמם🎮</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!קסם - איך זה ייתכן?😮</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!qr {טקסט} - קודי QR לטקסטים🔳</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!חיפוש - חפשו תוצאות מהירות⚡</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!יוטיוב (טקסט) - הורידו שירים🎧</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!זהה שיר - זהו שירים🎶</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!דרג - דירוג הבוט ובקשות📊</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!בוטיטו השיר - השיר של בוטיטו🎵</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!חזור - חוזר אחרייך כמו תוכי🦜</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!תרגם - תרגמו הודעות🔠</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!ספידטסט - מהירות התגובה 🕓</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!הוספת פקודה - הוסיפו פקודות🤩</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!הסרת פקודה - הסירו פקודות🥺</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!ספוטיפיי { } - חפשו בספוטיפיי🫨</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!שידוך - שדכו בין אנשים💍</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!מילים - הוראות שימוש בסינון📄</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!סוללה - מצב הסוללה בבוט🔋</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!פרופיל - נתונים על מספרים👁️</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!מיקום - מערכת המיקומים!!📡</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!קצר קישור - קצרו קישורים!♋</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!משימות - תזכורות ומשימות📬</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!סקר - צרו סקרים בקלות📈</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!סמלים - קבלו סמלים מיוחדים👁️‍🗨️</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!תמלל - תמללו הודעות📑</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!ניהול {כתגובה} - עוד מנהל🧑🏻‍💼</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!הודעות - כתבו הודעות לכולם✉️</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!בדיחה - מאגר הבדיחות בבוט🤣</a>
+            </div>
+            <div class="command-card">
+                <a href="#">!הוסף בדיחה - הוסף בדיחה לבוט😂</a>
+            </div>
+        </div>
+    </section>
 
-                <a href="https://wa.me/972552683919?text=!פקודות" class="chat-button">💬 צ'אט בוואטסאפ</a>
-
-            </ul>
-        </section>
-
-    </div>
     <script>
-        // Custom cursor
-        const cursor = document.querySelector('.custom-cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-        document.addEventListener('click', () => {
-            cursor.style.transform = 'scale(0.8)';
-            setTimeout(() => {
-                cursor.style.transform = 'scale(1)';
-            }, 100);
-        });
-        // Add emoji to username input when clicked
-        document.querySelectorAll('.emoji').forEach(emoji => {
-            emoji.addEventListener('click', function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Particles.js
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 80,
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: '#00f3ff'
+                    },
+                    shape: {
+                        type: 'circle'
+                    },
+                    opacity: {
+                        value: 0.5,
+                        random: false
+                    },
+                    size: {
+                        value: 3,
+                        random: true
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: '#00f3ff',
+                        opacity: 0.2,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 2,
+                        direction: 'none',
+                        random: false,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: 'repulse'
+                        },
+                        onclick: {
+                            enable: true,
+                            mode: 'push'
+                        },
+                        resize: true
+                    }
+                },
+                retina_detect: true
+            });
+
+            // Smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Add hover effect to command cards
+            document.querySelectorAll('.command-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
             });
         });
-
-        // Animate code lines
-        document.querySelectorAll('.code-line').forEach((line, index) => {
-            line.style.animationDuration = '30s'; // Slower animation
-            line.style.animationDelay = `${index * 5}s`;
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-    const codeAnimation = document.querySelector('.code-animation');
-    const matrixCharacters = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン123456789@#$%&*";
-    const numberOfLines = 15;
-
-    function createCodeLine() {
-        const line = document.createElement('div');
-        line.className = 'code-line';
-        line.style.top = Math.random() * 100 + '%';
-        line.style.animationDelay = Math.random() * 15 + 's'; // הארכת זמן העיכוב
-        
-        let code = '';
-        for(let i = 0; i < 20; i++) {
-            code += matrixCharacters[Math.floor(Math.random() * matrixCharacters.length)];
-        }
-        line.textContent = code;
-        
-        return line;
-    }
-
-    // יצירה ראשונית של שורות הקוד
-    for(let i = 0; i < numberOfLines; i++) {
-        codeAnimation.appendChild(createCodeLine());
-    }
-
-    // עדכון מתמשך של שורות הקוד
-    setInterval(() => {
-        const lines = document.querySelectorAll('.code-line');
-        lines.forEach(line => {
-            if (!line.style.animationName) {
-                line.remove();
-                codeAnimation.appendChild(createCodeLine());
-            }
-        });
-    }, 60000); // הארכת זמן הרענון
-});
     </script>
 </body>
 </html>
